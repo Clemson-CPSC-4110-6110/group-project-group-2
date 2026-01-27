@@ -1,0 +1,4 @@
+[merge "unityyamlmerge"]
+    name = Unity YAML Merge
+    driver = \"%UNITY_EDITOR_PATH%\" merge -p %O %B %A %A
+    recursive = binary

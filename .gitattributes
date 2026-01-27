@@ -1,0 +1,20 @@
+# Unity YAML files - use UnityYAMLMerge for smarter merging
+*.unity merge=unityyamlmerge
+*.prefab merge=unityyamlmerge
+*.asset merge=unityyamlmerge
+*.meta merge=unityyamlmerge
+*.controller merge=unityyamlmerge
+*.anim merge=unityyamlmerge
+*.overrideController merge=unityyamlmerge
+*.mask merge=unityyamlmerge
+*.mesh merge=unityyamlmerge
+*.mat merge=unityyamlmerge
+*.physicMaterial merge=unityyamlmerge
+*.physicsMaterial2D merge=unityyamlmerge
+*.lighting merge=unityyamlmerge
+*.giparams merge=unityyamlmerge
+*.renderTexture merge=unityyamlmerge
+*.spriteatlas merge=unityyamlmerge
+*.terrainlayer merge=unityyamlmerge
+*.mixer merge=unityyamlmerge
+*.shadervariants merge=unityyamlmerge
