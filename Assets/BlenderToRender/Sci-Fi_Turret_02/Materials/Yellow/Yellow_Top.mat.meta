@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aa8f25379217c6e4889b655eb14e24b1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 246911
+  packageName: Sci-Fi Turret_02
+  packageVersion: v.1.0.0
+  assetPath: Assets/BlenderToRender/Sci-Fi_Turret_02/Materials/Yellow/Yellow_Top.mat
+  uploadId: 568469

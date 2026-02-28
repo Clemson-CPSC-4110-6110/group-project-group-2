@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 318a165f887390b40808d38347418b66
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 246911
+  packageName: Sci-Fi Turret_02
+  packageVersion: v.1.0.0
+  assetPath: Assets/BlenderToRender/Sci-Fi_Turret_02/Materials/Red/Red_Base.mat
+  uploadId: 568469
