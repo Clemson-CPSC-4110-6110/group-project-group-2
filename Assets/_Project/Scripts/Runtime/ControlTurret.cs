@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 
 public class TwoHandleTurretStick : MonoBehaviour
 {
-    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable leftHandle;
-    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable rightHandle;
+    [Header("Handles")]
+    public XRSimpleInteractable leftHandle;
+    public XRSimpleInteractable rightHandle;
 
     [Header("Turret")]
     public Transform turretYaw;
@@ -14,10 +17,38 @@ public class TwoHandleTurretStick : MonoBehaviour
     public float maxPitch = 45f;
     public float handRange = 0.2f;
 
+    [Header("Shooting")]
+    public Transform leftBulletSpawn;
+    public Transform rightBulletSpawn;
+    public Rigidbody bulletPrefab;
+    public float bulletSpeed = 40f;
+    public float fireCooldown = 0.15f;
+
     Vector3 grabStartLocal;
     float grabStartYaw;
     float grabStartPitch;
     bool wasTwoHanded;
+
+    float leftNextFireTime;
+    float rightNextFireTime;
+
+    void OnEnable()
+    {
+        if (leftHandle != null)
+            leftHandle.activated.AddListener(OnLeftActivated);
+
+        if (rightHandle != null)
+            rightHandle.activated.AddListener(OnRightActivated);
+    }
+
+    void OnDisable()
+    {
+        if (leftHandle != null)
+            leftHandle.activated.RemoveListener(OnLeftActivated);
+
+        if (rightHandle != null)
+            rightHandle.activated.RemoveListener(OnRightActivated);
+    }
 
     void Update()
     {
@@ -63,7 +94,39 @@ public class TwoHandleTurretStick : MonoBehaviour
         }
     }
 
-    Transform GetHand(UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable handle)
+    void OnLeftActivated(ActivateEventArgs args)
+    {
+        if (!BothHandsHeld()) return;
+        if (Time.time < leftNextFireTime) return;
+
+        Fire(leftBulletSpawn);
+        leftNextFireTime = Time.time + fireCooldown;
+    }
+
+    void OnRightActivated(ActivateEventArgs args)
+    {
+        if (!BothHandsHeld()) return;
+        if (Time.time < rightNextFireTime) return;
+
+        Fire(rightBulletSpawn);
+        rightNextFireTime = Time.time + fireCooldown;
+    }
+
+    bool BothHandsHeld()
+    {
+        return GetHand(leftHandle) != null && GetHand(rightHandle) != null;
+    }
+
+    void Fire(Transform spawnPoint)
+    {
+        if (spawnPoint == null || bulletPrefab == null)
+            return;
+
+        Rigidbody bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+        bullet.linearVelocity = spawnPoint.forward * bulletSpeed;
+    }
+
+    Transform GetHand(XRSimpleInteractable handle)
     {
         if (handle == null || handle.interactorsSelecting.Count == 0)
             return null;
