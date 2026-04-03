@@ -16,7 +16,7 @@ public class SpaceShip : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
-        
+        // TODO: Add some visual feedback for the player taking damage.
     }
 
     // TODO: Add a function that will make the player lose if health is 0 or less.
