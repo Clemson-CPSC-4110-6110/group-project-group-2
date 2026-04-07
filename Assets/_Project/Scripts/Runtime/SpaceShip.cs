@@ -2,20 +2,17 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
-
-    float health;
-    int ammo;
+    private readonly Player player = new Player();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        health = 100f;
-        ammo = 100;
+        player.ResetPlayer();
     }
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
+        player.TakeDamage(damage);
         // TODO: Add some visual feedback for the player taking damage.
     }
 
@@ -23,12 +20,6 @@ public class SpaceShip : MonoBehaviour
 
     public void UseAmmo(int amount)
     {
-        ammo -= amount;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        player.UseAmmo(amount);
     }
 }
