@@ -1,1 +1,1 @@
-test2
+A new room with a turret has been added. This turret can be controlled by a yellow joystick at the center of the room. You must grab both handles of the joystick to move the turret, and the turret moves in an inverted fashion. Asteroids(destructible boxes) have been added, along with a script that spawns them in and homes them towards the ship. When you have control of the joysticks, you can also press the triggers to fire bullets.

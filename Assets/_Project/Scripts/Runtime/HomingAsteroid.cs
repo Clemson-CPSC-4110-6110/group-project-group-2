@@ -58,4 +58,12 @@ public class HomingAsteroid : MonoBehaviour
             _rigidBody.AddForce(away.normalized * separationForce, ForceMode.Acceleration);
         }
     }
+
+    private void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("SpaceShip"))
+        {
+            other.gameObject.GetComponent<SpaceShip>().TakeDamage(5f);
+            Destroy(gameObject);
+        }
+    }
 }
