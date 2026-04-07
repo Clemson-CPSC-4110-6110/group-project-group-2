@@ -10,7 +10,7 @@ public class HomingAsteroid : MonoBehaviour
     [SerializeField] private float moveForce = 3f;
     [SerializeField] private float separationRadius = 3f;
     [SerializeField] private float separationForce = 4f;
-    [SerializeField] private float maxSpeed = 1f;
+    [SerializeField] private float maxSpeed = 4f;
 
     [Header("Game Data")]
     [SerializeField] private float health = 100f;
