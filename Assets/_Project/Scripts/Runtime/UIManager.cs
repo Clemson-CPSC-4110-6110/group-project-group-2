@@ -8,24 +8,22 @@ public class UIManager : MonoBehaviour
     public Slider healthBar;
     public TextMeshProUGUI ammoCounter;
     public TextMeshProUGUI scoreText;
-
-    private Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        healthBar.maxValue = player.getMaxHealth();
-        healthBar.value = player.getHealth();
+        healthBar.maxValue = Player.getMaxHealth();
+        healthBar.value = Player.getHealth();
 
-        ammoCounter.text = $"Ammo: {player.getAmmo()}";
-        scoreText.text = $"Score: {player.getScore()}";
+        ammoCounter.text = $"Ammo: {Player.getAmmo()}";
+        scoreText.text = $"Score: {Player.getScore()}";
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthBar.value = player.getHealth();
+        healthBar.value = Player.getHealth();
 
-        ammoCounter.text = $"Ammo: {player.getAmmo()}";
-        scoreText.text = $"Score: {player.getScore()}";
+        ammoCounter.text = $"Ammo: {Player.getAmmo()}";
+        scoreText.text = $"Score: {Player.getScore()}";
     }
 }

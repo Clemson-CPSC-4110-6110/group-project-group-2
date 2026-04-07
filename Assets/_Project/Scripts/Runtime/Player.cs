@@ -1,49 +1,43 @@
 using UnityEngine;
 
-public class Player
+public static class Player
 {
     private const float MaxHealth = 100f;
     private const int MaxAmmo = 100;
     private const float DefaultFireRate = 0.5f;
     private const float MaxFireRate = 15f;
 
-    private float health;
-    private int ammo;
-    private float fireRate;
-    private int score;
+    private static float health;
+    private static int ammo;
+    private static float fireRate;
+    private static int score;
 
-    public Player()
-    {
-        ResetPlayer();
-        fireRate = DefaultFireRate;
-    }
-
-    public int getAmmo()
+    public static int getAmmo()
     {
         return ammo;
     }
 
-    public float getHealth()
+    public static float getHealth()
     {
         return health;
     }
 
-    public float getMaxHealth()
+    public static float getMaxHealth()
     {
         return MaxHealth;
     }
 
-    public float getFireRate()
+    public static float getFireRate()
     {
         return fireRate;
     }
 
-    public int getScore()
+    public static int getScore()
     {
         return score;
     }
 
-    public void TakeDamage(float damage)
+    public static void TakeDamage(float damage)
     {
         if (damage <= 0f)
         {
@@ -53,7 +47,7 @@ public class Player
         health = Mathf.Max(0f, health - damage);
     }
 
-    public void UseAmmo(int amount)
+    public static void UseAmmo(int amount)
     {
         if (amount <= 0)
         {
@@ -63,12 +57,12 @@ public class Player
         ammo = Mathf.Max(0, ammo - amount);
     }
 
-    public bool IsDead()
+    public static bool IsDead()
     {
         return health <= 0;
     }
 
-    public void ResetPlayer()
+    public static void ResetPlayer()
     {
         health = MaxHealth;
         ammo = MaxAmmo;
@@ -76,7 +70,7 @@ public class Player
         fireRate = DefaultFireRate;
     }
 
-    public void IncreaseFireRate(float amount)
+    public static void IncreaseFireRate(float amount)
     {
         if (amount < 0)
         {
