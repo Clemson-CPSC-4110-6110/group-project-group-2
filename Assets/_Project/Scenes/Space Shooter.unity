@@ -10657,9 +10657,12 @@ MonoBehaviour:
   turretYaw: {fileID: 1769132678}
   turretPitch: {fileID: 246083057}
   yawRange: 60
+  pitchRange: 35
   handRange: 0.2
   deadZone: 0.08
   smoothTime: 0.08
+  invertYaw: 0
+  invertPitch: 1
   leftBulletSpawn: {fileID: 32746097}
   rightBulletSpawn: {fileID: 999140010}
   bulletPrefab: {fileID: 7734003449763013473, guid: df82132daa8698f4abf36bce45ca5de9, type: 3}
@@ -14981,9 +14984,12 @@ MonoBehaviour:
   turretYaw: {fileID: 0}
   turretPitch: {fileID: 0}
   yawRange: 60
+  pitchRange: 35
   handRange: 0.2
   deadZone: 0.08
   smoothTime: 0.08
+  invertYaw: 0
+  invertPitch: 1
   leftBulletSpawn: {fileID: 0}
   rightBulletSpawn: {fileID: 0}
   bulletPrefab: {fileID: 0}
@@ -16717,7 +16723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   healthBar: {fileID: 1347913131}
-  ammoCounter: {fileID: 0}
+  ammoCounter: {fileID: 421032345}
   scoreText: {fileID: 1987391842}
 --- !u!43 &1185022788
 Mesh:
@@ -22737,11 +22743,15 @@ MonoBehaviour:
   asteroidPrefab: {fileID: 7751674833856116911, guid: 076f3dea334336d49a07f978c30ffe48, type: 3}
   target: {fileID: 968755399}
   aimReference: {fileID: 1769132678}
+  waveUI: {fileID: 0}
   spawnRadius: 30
-  spawnInterval: 2
-  asteroidsPerWave: 2
-  maxAliveAsteroids: 2
+  timeBetweenWaves: 2
+  startAsteroidsPerWave: 1
+  maxAsteroidsPerWave: 12
   horizontalHalfAngle: 60
+  asteroidsAddedPerWave: 1
+  asteroidSpeedIncreasePerWave: 0.1
+  maxSpeedMultiplier: 3
 --- !u!4 &1796204761
 Transform:
   m_ObjectHideFlags: 0
