@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -6828611720855768340}
   m_Layer: 0
   m_Name: Crate 1
-  m_TagString: Untagged
+  m_TagString: Asteroid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -193,4 +193,3 @@ MonoBehaviour:
   separationRadius: 3
   separationForce: 4
   maxSpeed: 1
-  health: 100

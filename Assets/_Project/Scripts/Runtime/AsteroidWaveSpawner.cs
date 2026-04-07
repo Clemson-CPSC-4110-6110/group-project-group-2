@@ -1,59 +1,92 @@
+using System.Collections;
 using UnityEngine;
 
 public class AsteroidWaveSpawner : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private GameObject asteroidPrefab;
-    [SerializeField] private Transform target;          // ship / thing they should fly toward
-    [SerializeField] private Transform aimReference;    // TurretYaw
+    [SerializeField] private Transform target;
+    [SerializeField] private Transform aimReference;
+    [SerializeField] private WaveUI waveUI;
+
+    [Header("Spawn Settings")]
     [SerializeField] private float spawnRadius = 60f;
-    [SerializeField] private float spawnInterval = 3f;
-    [SerializeField] private int asteroidsPerWave = 1;
-    [SerializeField] private int maxAliveAsteroids = 8;
+    [SerializeField] private float timeBetweenWaves = 2f;
+    [SerializeField] private int startAsteroidsPerWave = 1;
+    [SerializeField] private int maxAsteroidsPerWave = 12;
     [SerializeField] private float horizontalHalfAngle = 35f;
 
-    private float _timer;
+    [Header("Difficulty Scaling")]
+    [SerializeField] private int asteroidsAddedPerWave = 1;
+    [SerializeField] private float asteroidSpeedIncreasePerWave = 0.10f;
+    [SerializeField] private float maxSpeedMultiplier = 3f;
+
+    private int _waveNumber = 0;
+    private int _currentAsteroidsPerWave;
+    private float _currentSpeedMultiplier = 1f;
+    private bool _waveInProgress;
 
     private void Start()
     {
-        SpawnWave();
+        _currentAsteroidsPerWave = startAsteroidsPerWave;
+        StartCoroutine(WaveLoop());
     }
 
-    private void Update()
+    private IEnumerator WaveLoop()
     {
-        _timer += Time.deltaTime;
-
-        if (_timer >= spawnInterval)
+        while (true)
         {
-            _timer = 0f;
-            SpawnWave();
+            yield return new WaitUntil(() => !_waveInProgress);
+
+            StartWave();
+
+            yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Asteroid").Length == 0);
+
+            _waveInProgress = false;
+
+            yield return new WaitForSeconds(timeBetweenWaves);
         }
     }
 
-    private void SpawnWave()
+    private void StartWave()
     {
         if (asteroidPrefab == null || target == null || aimReference == null)
             return;
 
-        int aliveCount = GameObject.FindGameObjectsWithTag("Asteroid").Length;
-        if (aliveCount >= maxAliveAsteroids)
-            return;
+        _waveNumber++;
 
-        for (int i = 0; i < asteroidsPerWave; i++)
+        _currentAsteroidsPerWave = Mathf.Min(
+            maxAsteroidsPerWave,
+            startAsteroidsPerWave + ((_waveNumber - 1) * asteroidsAddedPerWave)
+        );
+
+        _currentSpeedMultiplier = Mathf.Min(
+            maxSpeedMultiplier,
+            1f + ((_waveNumber - 1) * asteroidSpeedIncreasePerWave)
+        );
+
+        if (waveUI != null)
+            waveUI.ShowWave(_waveNumber);
+
+        for (int i = 0; i < _currentAsteroidsPerWave; i++)
         {
             Vector3 direction = GetSpawnDirection();
             Vector3 position = target.position + direction * spawnRadius;
 
             GameObject asteroid = Instantiate(asteroidPrefab, position, Random.rotation);
 
-            // This is the important fix:
-            // BroadcastMessage reaches scripts on the asteroid OR its children.
-            asteroid.BroadcastMessage("Initialize", target, SendMessageOptions.DontRequireReceiver);
+            HomingAsteroid homingAsteroid = asteroid.GetComponentInChildren<HomingAsteroid>();
+            if (homingAsteroid != null)
+            {
+                homingAsteroid.Initialize(target, _currentSpeedMultiplier);
+            }
         }
+
+        _waveInProgress = true;
     }
 
     private Vector3 GetSpawnDirection()
     {
-        // Using negative forward because your current reference appears flipped.
         Vector3 flatForward = Vector3.ProjectOnPlane(-aimReference.forward, Vector3.up);
 
         if (flatForward.sqrMagnitude < 0.001f)

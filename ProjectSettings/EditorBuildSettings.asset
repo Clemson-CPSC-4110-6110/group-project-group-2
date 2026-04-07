@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/_Project/Scenes/M1.Product.unity
+    path: Assets/_Project/Scenes/Space Shooter.unity
     guid: e7a565ecf26f20641aac36e0ce02bc8a
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 82fb385940ec85846b19d6ea035f8803, type: 2}

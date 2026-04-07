@@ -10,11 +10,14 @@ public class TwoHandleTurretStick : MonoBehaviour
 
     [Header("Turret")]
     public Transform turretYaw;
-    public Transform turretPitch; // leave assigned if you want, but this script won't move it
+    public Transform turretPitch;
     public float yawRange = 60f;
+    public float pitchRange = 35f;
     public float handRange = 0.10f;
     public float deadZone = 0.08f;
     public float smoothTime = 0.08f;
+    public bool invertYaw = false;
+    public bool invertPitch = true;
 
     [Header("Shooting")]
     public Transform leftBulletSpawn;
@@ -23,13 +26,15 @@ public class TwoHandleTurretStick : MonoBehaviour
     public float bulletSpeed = 40f;
     public float fireCooldown = 0.15f;
 
-    Vector3 grabStartLocal;
-    float grabStartYaw;
-    bool wasTwoHanded;
+    private Vector3 grabStartLocal;
+    private float grabStartYaw;
+    private float grabStartPitch;
+    private bool wasTwoHanded;
 
-    float yawVelocity;
-    float leftNextFireTime;
-    float rightNextFireTime;
+    private float yawVelocity;
+    private float pitchVelocity;
+    private float leftNextFireTime;
+    private float rightNextFireTime;
 
     void OnEnable()
     {
@@ -69,21 +74,36 @@ public class TwoHandleTurretStick : MonoBehaviour
         {
             grabStartLocal = local;
             grabStartYaw = GetAngleY(turretYaw);
+            grabStartPitch = GetAngleX(turretPitch);
             wasTwoHanded = true;
         }
 
         Vector3 delta = local - grabStartLocal;
 
         float x = Mathf.Clamp(delta.x / handRange, -1f, 1f);
-        x = ApplyDeadZone(x);
+        float y = Mathf.Clamp(delta.y / handRange, -1f, 1f);
 
-        float targetYaw = grabStartYaw + x * yawRange;
+        x = ApplyDeadZone(x);
+        y = ApplyDeadZone(y);
+
+        float yawInput = invertYaw ? -x : x;
+        float pitchInput = invertPitch ? -y : y;
+
+        float targetYaw = grabStartYaw + yawInput * yawRange;
+        float targetPitch = grabStartPitch + pitchInput * pitchRange;
 
         if (turretYaw != null)
         {
             float currentYaw = GetAngleY(turretYaw);
             float smoothedYaw = Mathf.SmoothDampAngle(currentYaw, targetYaw, ref yawVelocity, smoothTime);
             turretYaw.localRotation = Quaternion.Euler(0f, smoothedYaw, 0f);
+        }
+
+        if (turretPitch != null)
+        {
+            float currentPitch = GetAngleX(turretPitch);
+            float smoothedPitch = Mathf.SmoothDampAngle(currentPitch, targetPitch, ref pitchVelocity, smoothTime);
+            turretPitch.localRotation = Quaternion.Euler(smoothedPitch, 0f, 0f);
         }
     }
 
@@ -145,6 +165,14 @@ public class TwoHandleTurretStick : MonoBehaviour
     {
         if (t == null) return 0f;
         float a = t.localEulerAngles.y;
+        if (a > 180f) a -= 360f;
+        return a;
+    }
+
+    float GetAngleX(Transform t)
+    {
+        if (t == null) return 0f;
+        float a = t.localEulerAngles.x;
         if (a > 180f) a -= 360f;
         return a;
     }

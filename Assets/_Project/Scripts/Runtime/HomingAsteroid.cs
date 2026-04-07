@@ -5,6 +5,7 @@ public class HomingAsteroid : MonoBehaviour
 {
     private Transform _seekTarget;
     private Rigidbody _rigidBody;
+    private float _speedMultiplier = 1f;
 
     [Header("Movement Information")]
     [SerializeField] private float moveForce = 3f;
@@ -12,15 +13,12 @@ public class HomingAsteroid : MonoBehaviour
     [SerializeField] private float separationForce = 4f;
     [SerializeField] private float maxSpeed = 4f;
 
-    [Header("Game Data")]
-    [SerializeField] private float health = 100f;
-
     private readonly Collider[] _separationResults = new Collider[32];
 
-    public void Initialize(Transform target)
+    public void Initialize(Transform target, float speedMultiplier)
     {
         _seekTarget = target;
-        _rigidBody.maxLinearVelocity = maxSpeed;
+        _speedMultiplier = Mathf.Max(1f, speedMultiplier);
     }
 
     private void Awake()
@@ -34,12 +32,13 @@ public class HomingAsteroid : MonoBehaviour
 
         MoveTowardTarget();
         ApplySeparation();
+        ClampSpeed();
     }
 
     private void MoveTowardTarget()
     {
         Vector3 dir = (_seekTarget.position - transform.position).normalized;
-        _rigidBody.AddForce(dir * moveForce, ForceMode.Acceleration);
+        _rigidBody.AddForce(dir * moveForce * _speedMultiplier, ForceMode.Acceleration);
     }
 
     private void ApplySeparation()
@@ -59,11 +58,27 @@ public class HomingAsteroid : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("SpaceShip"))
+    private void ClampSpeed()
+    {
+        float limit = maxSpeed * _speedMultiplier;
+
+        if (_rigidBody.linearVelocity.sqrMagnitude > limit * limit)
         {
-            other.gameObject.GetComponent<SpaceShip>().TakeDamage(5f);
-            Destroy(gameObject);
+            _rigidBody.linearVelocity = _rigidBody.linearVelocity.normalized * limit;
         }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!other.gameObject.CompareTag("SpaceShip"))
+            return;
+
+        SpaceShip ship = other.gameObject.GetComponent<SpaceShip>();
+        if (ship != null)
+        {
+            ship.TakeDamage(5f);
+        }
+
+        Destroy(gameObject);
     }
 }
