@@ -64,6 +64,8 @@ public static class Player
 
     public static void ResetPlayer()
     {
+        Debug.Log("Reset Player");
+
         health = MaxHealth;
         ammo = MaxAmmo;
         score = 0;

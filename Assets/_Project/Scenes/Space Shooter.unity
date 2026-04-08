@@ -4558,7 +4558,7 @@ GameObject:
   - component: {fileID: 200407390}
   - component: {fileID: 200407389}
   m_Layer: 5
-  m_Name: Fill
+  m_Name: HealthFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15075,6 +15075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13244bf2ef7aa6f45b029c1f1cf3693c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  waveSpawner: {fileID: 1796204760}
 --- !u!1 &985403057
 GameObject:
   m_ObjectHideFlags: 0
@@ -16706,6 +16707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71362a4caafd52149a9b7640d38cf96b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  healthFill: {fileID: 200407389}
   healthBar: {fileID: 1347913131}
   ammoCounter: {fileID: 421032345}
   scoreText: {fileID: 1987391842}
@@ -20614,7 +20616,7 @@ GameObject:
   - component: {fileID: 1500157753}
   m_Layer: 0
   m_Name: Space Ship
-  m_TagString: Untagged
+  m_TagString: SpaceShip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22876,7 +22878,7 @@ MonoBehaviour:
   spawnRadius: 30
   timeBetweenWaves: 2
   startAsteroidsPerWave: 1
-  maxAsteroidsPerWave: 15
+  maxAsteroidsPerWave: 14
   horizontalHalfAngle: 60
   asteroidsAddedPerWave: 1
   asteroidSpeedIncreasePerWave: 0.5

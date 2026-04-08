@@ -99,4 +99,33 @@ public class AsteroidWaveSpawner : MonoBehaviour
 
         return dir.normalized;
     }
+
+    public void ResetToWaveOne()
+    {
+        Debug.Log("Resetting to Wave 1");
+        StopAllCoroutines();
+
+        GameObject[] asteroids = GameObject.FindGameObjectsWithTag("Asteroid");
+        foreach (GameObject asteroid in asteroids)
+        {
+            Destroy(asteroid);
+        }
+        Debug.Log("Resetted to Wave 1");
+
+        if (waveUI != null)
+            waveUI.ShowText("You Lost");
+
+        StartCoroutine(RestartAfterLoss());
+    }
+
+    private IEnumerator RestartAfterLoss()
+    {
+        _waveNumber = 0;
+        _currentAsteroidsPerWave = startAsteroidsPerWave;
+        _currentSpeedMultiplier = 1f;
+        _waveInProgress = false;
+
+        yield return new WaitForSeconds(5f);
+        StartCoroutine(WaveLoop());
+    }
 }
