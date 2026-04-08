@@ -17,10 +17,15 @@ public class WaveUI : MonoBehaviour
 
     public void ShowWave(int waveNumber)
     {
+        ShowText($"Wave {waveNumber}");
+    }
+
+    public void ShowText(string text)
+    {
         if (waveText == null)
             return;
 
-        waveText.text = $"Wave {waveNumber}";
+        waveText.text = text;
         SetAlpha(1f);
 
         if (_fadeRoutine != null)
