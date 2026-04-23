@@ -25,6 +25,8 @@ public class TwoHandleTurretStick : MonoBehaviour
     public Rigidbody bulletPrefab;
     public float bulletSpeed = 40f;
     public float fireCooldown = 0.15f;
+    public float minFireCooldown = 0.03f;
+    public float baseProjectileDamage = 1f;
 
     private Vector3 grabStartLocal;
     private float grabStartYaw;
@@ -113,7 +115,7 @@ public class TwoHandleTurretStick : MonoBehaviour
         if (Time.time < leftNextFireTime) return;
 
         Fire(leftBulletSpawn);
-        leftNextFireTime = Time.time + fireCooldown;
+        leftNextFireTime = Time.time + GetCurrentFireCooldown();
     }
 
     void OnRightActivated(ActivateEventArgs args)
@@ -122,7 +124,7 @@ public class TwoHandleTurretStick : MonoBehaviour
         if (Time.time < rightNextFireTime) return;
 
         Fire(rightBulletSpawn);
-        rightNextFireTime = Time.time + fireCooldown;
+        rightNextFireTime = Time.time + GetCurrentFireCooldown();
     }
 
     bool BothHandsHeld()
@@ -137,6 +139,24 @@ public class TwoHandleTurretStick : MonoBehaviour
 
         Rigidbody bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
         bullet.linearVelocity = spawnPoint.forward * bulletSpeed;
+
+        TurretProjectile projectile = bullet.GetComponent<TurretProjectile>();
+        if (projectile == null)
+        {
+            projectile = bullet.gameObject.AddComponent<TurretProjectile>();
+        }
+
+        projectile.SetBaseDamage(Player.GetTurretDamagePerShot());
+    }
+
+    float GetCurrentFireCooldown()
+    {
+        float shotsPerSecond = Player.GetTurretShotsPerSecond();
+
+        if (shotsPerSecond <= 0f)
+            return fireCooldown;
+
+        return Mathf.Max(minFireCooldown, 1f / shotsPerSecond);
     }
 
     Transform GetHand(XRSimpleInteractable handle)

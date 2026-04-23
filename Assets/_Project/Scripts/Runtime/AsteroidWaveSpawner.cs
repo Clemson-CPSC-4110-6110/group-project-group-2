@@ -79,6 +79,20 @@ public class AsteroidWaveSpawner : MonoBehaviour
             if (homingAsteroid != null)
             {
                 homingAsteroid.Initialize(target, _currentSpeedMultiplier);
+
+                EnemyHealth enemyHealth = homingAsteroid.GetComponent<EnemyHealth>();
+                if (enemyHealth == null)
+                {
+                    homingAsteroid.gameObject.AddComponent<EnemyHealth>();
+                }
+            }
+            else
+            {
+                EnemyHealth enemyHealth = asteroid.GetComponent<EnemyHealth>();
+                if (enemyHealth == null)
+                {
+                    asteroid.AddComponent<EnemyHealth>();
+                }
             }
         }
 

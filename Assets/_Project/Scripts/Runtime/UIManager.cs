@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,7 +9,7 @@ public class UIManager : MonoBehaviour
     public Image healthFill;
     public Slider healthBar;
     public TextMeshProUGUI ammoCounter;
-    public TextMeshProUGUI scoreText;
+    public List<TextMeshProUGUI> scoreTexts;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,7 +19,7 @@ public class UIManager : MonoBehaviour
         healthBar.value = Player.getHealth();
 
         ammoCounter.text = $"Ammo: {Player.getAmmo()}";
-        scoreText.text = $"Score: {Player.getScore()}";
+        UpdateScoreTexts();
     }
 
     // Update is called once per frame
@@ -42,6 +43,22 @@ public class UIManager : MonoBehaviour
         }
 
         ammoCounter.text = $"Ammo: {Player.getAmmo()}";
-        scoreText.text = $"Score: {Player.getScore()}";
+        UpdateScoreTexts();
+    }
+
+    private void UpdateScoreTexts()
+    {
+        if (scoreTexts == null)
+            return;
+
+        string scoreLabel = $"Score: {Player.getScore()}";
+
+        for (int i = 0; i < scoreTexts.Count; i++)
+        {
+            if (scoreTexts[i] != null)
+            {
+                scoreTexts[i].text = scoreLabel;
+            }
+        }
     }
 }

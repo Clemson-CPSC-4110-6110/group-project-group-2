@@ -6,10 +6,16 @@ public static class Player
     private const int MaxAmmo = 100;
     private const float DefaultFireRate = 0.5f;
     private const float MaxFireRate = 15f;
+    private const float DefaultTurretFireCooldown = 0.15f;
+    private const float DefaultTurretDamagePerShot = 1f;
+    private const float DefaultTurretFireRateMultiplier = 1f;
+    private const float DefaultTurretDamageMultiplier = 1f;
 
     private static float health;
     private static int ammo;
     private static float fireRate;
+    private static float turretFireRateMultiplier;
+    private static float turretDamageMultiplier;
     private static int score;
 
     public static int getAmmo()
@@ -35,6 +41,62 @@ public static class Player
     public static int getScore()
     {
         return score;
+    }
+
+    public static float GetTurretFireRateMultiplier()
+    {
+        return turretFireRateMultiplier;
+    }
+
+    public static float GetTurretShotsPerSecond()
+    {
+        return (1f / DefaultTurretFireCooldown) * turretFireRateMultiplier;
+    }
+
+    public static float GetTurretDamageMultiplier()
+    {
+        return turretDamageMultiplier;
+    }
+
+    public static float GetTurretDamagePerShot()
+    {
+        return DefaultTurretDamagePerShot * turretDamageMultiplier;
+    }
+
+    public static void SetTurretFireRateMultiplier(float multiplier)
+    {
+        turretFireRateMultiplier = Mathf.Max(1f, multiplier);
+    }
+
+    public static void SetTurretDamageMultiplier(float multiplier)
+    {
+        turretDamageMultiplier = Mathf.Max(1f, multiplier);
+    }
+
+    public static void AddScore(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        score += amount;
+    }
+
+    public static bool TrySpendScore(int amount)
+    {
+        if (amount <= 0)
+        {
+            return true;
+        }
+
+        if (score < amount)
+        {
+            return false;
+        }
+
+        score -= amount;
+        return true;
     }
 
     public static void TakeDamage(float damage)
@@ -70,6 +132,8 @@ public static class Player
         ammo = MaxAmmo;
         score = 0;
         fireRate = DefaultFireRate;
+        turretFireRateMultiplier = DefaultTurretFireRateMultiplier;
+        turretDamageMultiplier = DefaultTurretDamageMultiplier;
     }
 
     public static void IncreaseFireRate(float amount)

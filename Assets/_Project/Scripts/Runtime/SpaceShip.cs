@@ -13,7 +13,6 @@ public class SpaceShip : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Player.TakeDamage(damage);
-        // TODO: Add some visual feedback for the player taking damage.
 
         if (Player.getHealth() <= 0f)
         {
@@ -28,8 +27,6 @@ public class SpaceShip : MonoBehaviour
         waveSpawner.ResetToWaveOne();
         Player.ResetPlayer();
     }
-
-    // TODO: Add a function that will make the player lose if health is 0 or less.
 
     public void UseAmmo(int amount)
     {
