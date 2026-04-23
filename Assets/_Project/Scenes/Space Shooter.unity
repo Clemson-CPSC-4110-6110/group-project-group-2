@@ -3001,6 +3001,7 @@ GameObject:
   - component: {fileID: 156351929}
   - component: {fileID: 156351928}
   - component: {fileID: 156351931}
+  - component: {fileID: 156351932}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -3103,17 +3104,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ced30b5cbce2644c8810d0e8cdea46f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  turret: {fileID: 0}
   fireRateUpgradeCostText: {fileID: 1339413787}
+  fireRateStatText: {fileID: 858396882}
   fireRateBaseCost: 50
   fireRateCostStep: 25
   fireRateMultiplierPerLevel: 0.2
   maxFireRateLevel: 5
   damageUpgradeCostText: {fileID: 474273638}
+  damageStatText: {fileID: 660959048}
   damageBaseCost: 50
   damageCostStep: 25
   damageMultiplierPerLevel: 0.25
   maxDamageLevel: 5
+--- !u!114 &156351932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156351926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.TrackedDeviceGraphicRaycaster
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!43 &177763433
 Mesh:
   m_ObjectHideFlags: 0
@@ -18399,7 +18420,6 @@ GameObject:
   - component: {fileID: 1293328749}
   - component: {fileID: 1293328751}
   - component: {fileID: 1293328750}
-  - component: {fileID: 1293328752}
   m_Layer: 5
   m_Name: Upgrade2
   m_TagString: Untagged
@@ -18468,25 +18488,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1293328748}
   m_CullTransparentMesh: 1
---- !u!114 &1293328752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293328748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.TrackedDeviceGraphicRaycaster
-  m_IgnoreReversedGraphics: 0
-  m_CheckFor2DOcclusion: 0
-  m_CheckFor3DOcclusion: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RaycastTriggerInteraction: 1
 --- !u!1001 &1321164106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22043,7 +22044,6 @@ GameObject:
   - component: {fileID: 1596123348}
   - component: {fileID: 1596123350}
   - component: {fileID: 1596123349}
-  - component: {fileID: 1596123351}
   m_Layer: 5
   m_Name: Upgrade1
   m_TagString: Untagged
@@ -22112,25 +22112,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596123347}
   m_CullTransparentMesh: 1
---- !u!114 &1596123351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1596123347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.UI.TrackedDeviceGraphicRaycaster
-  m_IgnoreReversedGraphics: 0
-  m_CheckFor2DOcclusion: 0
-  m_CheckFor3DOcclusion: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RaycastTriggerInteraction: 1
 --- !u!43 &1697835044
 Mesh:
   m_ObjectHideFlags: 0
