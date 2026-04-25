@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: DoorFrame
   m_Shader: {fileID: 4800000, guid: 4e90a8289da1f3943885176e4f83e35c, type: 3}
-  m_Parent: {fileID: 2100000, guid: 9c1f216d20d0143c495f8be440d54d74, type: 2}
+  m_Parent: {fileID: 2100000, guid: db6a37a1ce8f742aebcff4c72f94b067, type: 2}
   m_ModifiedSerializedProperties: 2
   m_ValidKeywords: []
   m_InvalidKeywords:

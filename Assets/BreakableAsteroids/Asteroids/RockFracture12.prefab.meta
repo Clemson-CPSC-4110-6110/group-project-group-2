@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 16165ff48390af44f993e05c19bac115
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 167825
+  packageName: Breakable Asteroids
+  packageVersion: 1.0
+  assetPath: Assets/BreakableAsteroids/Asteroids/RockFracture12.prefab
+  uploadId: 365415
