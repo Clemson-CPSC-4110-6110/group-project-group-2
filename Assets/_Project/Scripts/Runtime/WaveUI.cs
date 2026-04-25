@@ -15,6 +15,11 @@ public class WaveUI : MonoBehaviour
         SetAlpha(0f);
     }
 
+    public void ShowGrabJoystick()
+    {
+        ShowPersistentText("Grab the Joystick!");
+    }
+
     public void ShowWave(int waveNumber)
     {
         ShowText($"Wave {waveNumber}");
@@ -32,6 +37,35 @@ public class WaveUI : MonoBehaviour
             StopCoroutine(_fadeRoutine);
 
         _fadeRoutine = StartCoroutine(FadeOut());
+    }
+
+    public void ShowPersistentText(string text)
+    {
+        if (waveText == null)
+            return;
+
+        waveText.text = text;
+        SetAlpha(1f);
+
+        if (_fadeRoutine != null)
+        {
+            StopCoroutine(_fadeRoutine);
+            _fadeRoutine = null;
+        }
+    }
+
+    public void HideText()
+    {
+        if (waveText == null)
+            return;
+
+        if (_fadeRoutine != null)
+        {
+            StopCoroutine(_fadeRoutine);
+            _fadeRoutine = null;
+        }
+
+        SetAlpha(0f);
     }
 
     private IEnumerator FadeOut()
@@ -56,7 +90,8 @@ public class WaveUI : MonoBehaviour
 
     private void SetAlpha(float alpha)
     {
-        if (waveText == null) return;
+        if (waveText == null)
+            return;
 
         Color c = waveText.color;
         c.a = alpha;

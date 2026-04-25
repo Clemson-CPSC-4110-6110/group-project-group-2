@@ -22,6 +22,11 @@ public class MountedJoystickTurret : MonoBehaviour
     public float minPitch = -45f;
     public float maxPitch = 45f;
 
+    [Header("Joystick Visual")]
+    public Transform joystickVisual;
+    public float joystickTiltAmount = 20f;
+    public float joystickReturnSpeed = 10f;
+
     [Header("Aim Reticle")]
     public Transform reticle;
     public float reticleDistance = 80f;
@@ -37,7 +42,10 @@ public class MountedJoystickTurret : MonoBehaviour
     private float currentPitch;
     private float nextFireTime;
 
+    private InputDevice leftController;
     private InputDevice rightController;
+
+    private Quaternion joystickStartRotation;
 
     void Awake()
     {
@@ -48,6 +56,12 @@ public class MountedJoystickTurret : MonoBehaviour
             if (joystickObject != null)
                 handle = joystickObject.GetComponent<XRSimpleInteractable>();
         }
+
+        if (joystickVisual == null && handle != null)
+            joystickVisual = handle.transform;
+
+        if (joystickVisual != null)
+            joystickStartRotation = joystickVisual.localRotation;
     }
 
     void OnEnable()
@@ -73,23 +87,24 @@ public class MountedJoystickTurret : MonoBehaviour
         currentYaw = GetAngleY(turretYaw);
         currentPitch = GetAngleX(turretPitch);
 
+        leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
         rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
     }
 
     void Update()
     {
-        if (!rightController.isValid)
-            rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        RefreshControllers();
 
         if (requireHandleHeld && !isHeld)
         {
             UpdateReticle();
+            ResetJoystickVisual();
             return;
         }
 
-        Vector2 stick;
+        Vector2 stick = GetBestStickInput();
 
-        if (rightController.TryGetFeatureValue(CommonUsages.primary2DAxis, out stick))
+        if (stick.sqrMagnitude > 0.001f)
         {
             float yawInput = stick.x * yawSharpness;
             float pitchInput = stick.y * pitchSharpness;
@@ -104,20 +119,96 @@ public class MountedJoystickTurret : MonoBehaviour
 
             if (turretPitch != null)
                 turretPitch.localRotation = Quaternion.Euler(currentPitch, 0f, 0f);
+
+            UpdateJoystickVisual(stick);
+        }
+        else
+        {
+            ResetJoystickVisual();
         }
 
         UpdateReticle();
 
-        bool triggerPressed;
-
-        if (rightController.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed))
+        if (AnyTriggerPressed() && Time.time >= nextFireTime)
         {
-            if (triggerPressed && Time.time >= nextFireTime)
-            {
-                Fire();
-                nextFireTime = Time.time + fireCooldown;
-            }
+            Fire();
+            nextFireTime = Time.time + fireCooldown;
         }
+    }
+
+    void RefreshControllers()
+    {
+        if (!leftController.isValid)
+            leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+
+        if (!rightController.isValid)
+            rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+    }
+
+    Vector2 GetBestStickInput()
+    {
+        Vector2 leftStick = Vector2.zero;
+        Vector2 rightStick = Vector2.zero;
+
+        if (leftController.isValid)
+            leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftStick);
+
+        if (rightController.isValid)
+            rightController.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightStick);
+
+        if (leftStick.sqrMagnitude > rightStick.sqrMagnitude)
+            return leftStick;
+
+        return rightStick;
+    }
+
+    bool AnyTriggerPressed()
+    {
+        bool leftTrigger = false;
+        bool rightTrigger = false;
+
+        if (leftController.isValid)
+            leftController.TryGetFeatureValue(CommonUsages.triggerButton, out leftTrigger);
+
+        if (rightController.isValid)
+            rightController.TryGetFeatureValue(CommonUsages.triggerButton, out rightTrigger);
+
+        return leftTrigger || rightTrigger;
+    }
+
+    void UpdateJoystickVisual(Vector2 stick)
+    {
+        if (joystickVisual == null)
+            return;
+
+        float forwardBackTilt = -stick.y * joystickTiltAmount;
+        float leftRightTilt = stick.x * joystickTiltAmount;
+
+        joystickVisual.localRotation =
+            joystickStartRotation *
+            Quaternion.Euler(forwardBackTilt, 0f, leftRightTilt);
+    }
+
+    void ResetJoystickVisual()
+    {
+        if (joystickVisual == null)
+            return;
+
+        joystickVisual.localRotation = Quaternion.Lerp(
+            joystickVisual.localRotation,
+            joystickStartRotation,
+            Time.deltaTime * joystickReturnSpeed
+        );
+    }
+
+    void OnGrabbed(SelectEnterEventArgs args)
+    {
+        isHeld = true;
+    }
+
+    void OnReleased(SelectExitEventArgs args)
+    {
+        isHeld = false;
     }
 
     void UpdateReticle()
@@ -151,8 +242,11 @@ public class MountedJoystickTurret : MonoBehaviour
 
         Transform hitTransform = hit.collider.transform;
 
-        if (hitTransform == reticle || hitTransform.IsChildOf(reticle))
-            return true;
+        if (reticle != null)
+        {
+            if (hitTransform == reticle || hitTransform.IsChildOf(reticle))
+                return true;
+        }
 
         if (hit.collider.GetComponentInParent<TurretProjectile>() != null)
             return true;
@@ -169,16 +263,6 @@ public class MountedJoystickTurret : MonoBehaviour
         }
 
         return false;
-    }
-
-    void OnGrabbed(SelectEnterEventArgs args)
-    {
-        isHeld = true;
-    }
-
-    void OnReleased(SelectExitEventArgs args)
-    {
-        isHeld = false;
     }
 
     void Fire()

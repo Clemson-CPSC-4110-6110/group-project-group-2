@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class AsteroidWaveSpawner : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class AsteroidWaveSpawner : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private Transform aimReference;
     [SerializeField] private WaveUI waveUI;
+    [SerializeField] private XRSimpleInteractable joystick;
 
     [Header("Spawn Settings")]
     [SerializeField] private float spawnRadius = 60f;
@@ -25,15 +28,53 @@ public class AsteroidWaveSpawner : MonoBehaviour
     private int _currentAsteroidsPerWave;
     private float _currentSpeedMultiplier = 1f;
     private bool _waveInProgress;
+    private bool _joystickGrabbed;
+
+    private void Awake()
+    {
+        if (joystick == null)
+        {
+            GameObject joystickObject = GameObject.Find("Joystick");
+
+            if (joystickObject != null)
+                joystick = joystickObject.GetComponent<XRSimpleInteractable>();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (joystick != null)
+            joystick.selectEntered.AddListener(OnJoystickGrabbed);
+    }
+
+    private void OnDisable()
+    {
+        if (joystick != null)
+            joystick.selectEntered.RemoveListener(OnJoystickGrabbed);
+    }
 
     private void Start()
     {
         _currentAsteroidsPerWave = startAsteroidsPerWave;
+
+        if (waveUI != null)
+            waveUI.ShowGrabJoystick();
+
         StartCoroutine(WaveLoop());
+    }
+
+    private void OnJoystickGrabbed(SelectEnterEventArgs args)
+    {
+        _joystickGrabbed = true;
+
+        if (waveUI != null)
+            waveUI.HideText();
     }
 
     private IEnumerator WaveLoop()
     {
+        yield return new WaitUntil(() => _joystickGrabbed);
+
         while (true)
         {
             yield return new WaitUntil(() => !_waveInProgress);
@@ -76,23 +117,22 @@ public class AsteroidWaveSpawner : MonoBehaviour
             GameObject asteroid = Instantiate(asteroidPrefab, position, Random.rotation);
 
             HomingAsteroid homingAsteroid = asteroid.GetComponentInChildren<HomingAsteroid>();
+
             if (homingAsteroid != null)
             {
                 homingAsteroid.Initialize(target, _currentSpeedMultiplier);
 
                 EnemyHealth enemyHealth = homingAsteroid.GetComponent<EnemyHealth>();
+
                 if (enemyHealth == null)
-                {
                     homingAsteroid.gameObject.AddComponent<EnemyHealth>();
-                }
             }
             else
             {
                 EnemyHealth enemyHealth = asteroid.GetComponent<EnemyHealth>();
+
                 if (enemyHealth == null)
-                {
                     asteroid.AddComponent<EnemyHealth>();
-                }
             }
         }
 
@@ -120,10 +160,10 @@ public class AsteroidWaveSpawner : MonoBehaviour
         StopAllCoroutines();
 
         GameObject[] asteroids = GameObject.FindGameObjectsWithTag("Asteroid");
+
         foreach (GameObject asteroid in asteroids)
-        {
             Destroy(asteroid);
-        }
+
         Debug.Log("Resetted to Wave 1");
 
         if (waveUI != null)
@@ -138,8 +178,13 @@ public class AsteroidWaveSpawner : MonoBehaviour
         _currentAsteroidsPerWave = startAsteroidsPerWave;
         _currentSpeedMultiplier = 1f;
         _waveInProgress = false;
+        _joystickGrabbed = false;
 
         yield return new WaitForSeconds(5f);
+
+        if (waveUI != null)
+            waveUI.ShowGrabJoystick();
+
         StartCoroutine(WaveLoop());
     }
 }
